@@ -10,7 +10,7 @@ const page = () => {
 
   const submitHandler = (e: React.FormEvent) => {
     e.preventDefault();
-    setMainTask([...mainTask, { title, desc }]);
+    setMainTask([...mainTask, { title, desc, completed: false }]);
     console.log(mainTask);
     settitle("");
     setDesc("");
@@ -21,12 +21,26 @@ const page = () => {
     updatedTasks.splice(idx, 1);
     setMainTask(updatedTasks);
   };
+  const completeTask = (idx: number) => {
+    const updatedTasks = [...mainTask];
+    updatedTasks[idx].completed = !updatedTasks[idx].completed;
+    setMainTask(updatedTasks);
+  };
 
   let renderTask = <h1 className='text-center text-2xl font-bold mt-5'>No Task Added</h1>;
   if (mainTask.length > 0) {
     renderTask = mainTask.map((task, idx) => (
       <li key={idx} className="mb-2">
-        <span className="font-semibold">{task.title}</span>: {task.desc}
+         <input
+          onChange={() => completeTask(idx)}
+          checked={task.completed}
+          type="checkbox"
+          className='mr-2'
+        />
+  <span className={`font-semibold ${task.completed ? 'line-through text-gray-400' : ''}`}>
+          {task.title}
+        </span>
+        <span className={task.completed ? 'line-through text-gray-400' : ''}>: {task.desc}</span>
         <button onClick={() => deleteHandler(idx)}
           className='bg-red-500 text-white font-bold py-2 px-4 rounded-md mt-5 ml-5'>
           Delete
